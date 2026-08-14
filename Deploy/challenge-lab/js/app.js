@@ -17,13 +17,10 @@ const commandLabel = { MOVE: "↑ MOVE", LEFT: "↶ LEFT", RIGHT: "↷ RIGHT" };
 const state = {
   index: 0,
   completed: new Set(JSON.parse(localStorage.getItem("oyc-smart-complete") || "[]")),
-  unlocked: 0,
   data: {},
   engine: new GridEngine(),
   busy: false,
 };
-state.unlocked = Math.max(0, Math.min(9, state.completed.size));
-
 const scenePseudocode = {
   sequence: ["RUN each instruction in order", "MOVE()", "MOVE()", "TURN_LEFT()", "MOVE()"],
   trace: ["PREDICT(final_position)", "RUN(program)", "COMPARE(prediction, position)"],
@@ -102,15 +99,15 @@ function disableAll(flag) {
   resetButton.disabled = flag;
   hintButton.disabled = flag;
   [...workspace.querySelectorAll("button")].forEach(b => b.disabled=flag);
-  [...progress.querySelectorAll("button")].forEach((b,i) => b.disabled=flag || i>state.unlocked);
+  [...progress.querySelectorAll("button")].forEach(b => b.disabled=flag);
 }
 function complete(title, copy) {
-  state.completed.add(state.index); state.unlocked=Math.max(state.unlocked, Math.min(9,state.index+1)); saveProgress();
+  state.completed.add(state.index); saveProgress();
   explanationCard.hidden=false;
   document.querySelector("#explanation-title").textContent=title || challenge().concept;
   document.querySelector("#explanation-copy").textContent=copy || challenge().learn;
-  nextButton.textContent = state.index===9 ? "Smart Lab complete ✓" : "Next challenge →";
-  say("Solved. You unlocked a new idea.");
+  nextButton.textContent = state.index===9 ? "All challenges complete ✓" : "Next challenge →";
+  say("Well done! Challenge solved.");
   renderProgress();
   explanationCard.scrollIntoView({behavior:"smooth",block:"nearest"});
 }
@@ -121,7 +118,7 @@ function renderProgress() {
   CHALLENGES.forEach((c,i)=>{
     const b=document.createElement("button"); b.type="button"; b.className="progress-step"; b.textContent=i+1; b.title=`${i+1}. ${c.title}`;
     if (i===state.index) b.classList.add("is-current"); if (state.completed.has(i)) b.classList.add("is-complete");
-    b.disabled=i>state.unlocked || state.busy;
+    b.disabled=state.busy;
     b.addEventListener("click",()=>load(i)); progress.append(b);
   });
 }
@@ -368,7 +365,6 @@ const hints={
 };
 
 function load(index){
-  if(index>state.unlocked) return;
   state.index=index; state.data={}; state.busy=false;
   explanationCard.hidden=true; workspace.replaceChildren();
   renderHeader(); buildTiles(); setupEngine(); markGoal(challenge().goal); renderProgress();

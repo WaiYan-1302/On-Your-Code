@@ -1,7 +1,7 @@
 # On Your Code · Day 2
 
-A mobile-first set of three guided programming challenges for the On Your Mark
-camp. It uses the four-direction Maro sprite and runs as a static website.
+A mobile-first set of three guided programming challenges for On Your Code. It
+uses the four-direction Maro sprite and runs as a static website.
 
 ## Teaching progression
 

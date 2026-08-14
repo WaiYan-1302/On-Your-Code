@@ -113,6 +113,7 @@ h1,h2,p { margin-top:0; } h1 { margin-bottom:0; font-size:clamp(1.75rem,8vw,2.4r
 .run-button { flex:1.4; background:var(--blue); color:white; box-shadow:3px 3px 0 var(--ink); }
 .control-button { flex:.7; background:var(--yellow); }
 .explanation-card { display:grid; margin-top:14px; padding:14px; grid-template-columns:auto 1fr; gap:12px; background:#f1fff9; }
+.explanation-card[hidden] { display:none; }
 .success-mark { display:grid; width:42px; height:42px; place-items:center; border:2px solid var(--ink); border-radius:50%; background:var(--mint); font-size:1.3rem; font-weight:1000; box-shadow:2px 2px 0 var(--ink); }
 .explanation-card h2 { margin-top:4px; font-size:1rem; }
 .explanation-card p:not(.step-label) { margin:6px 0 9px; font-size:.7rem; font-weight:720; line-height:1.4; }

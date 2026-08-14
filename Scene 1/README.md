@@ -1,6 +1,6 @@
 # On Your Code
 
-A portrait mobile-first creative coding playground for the On Your Mark camp.
+A portrait mobile-first creative coding playground for On Your Code.
 
 This Day‑1 build features Maro and includes:
 
