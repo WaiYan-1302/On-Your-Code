@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Maro's Workshop 2 — Creature Behavior Lab</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="page-shell">
+    <header class="topbar bauhaus-card">
+      <div>
+        <p class="eyebrow">ON YOUR CODE · SCENE 05</p>
+        <h1>Maro's Workshop 2 — Creature Behavior Lab</h1>
+        <p class="subtext">Build a tiny creature, give it a rule, and watch it come alive.</p>
+      </div>
+      <div class="header-actions">
+        <button id="missionBtn" class="pill-button secondary">Idea Cards</button>
+        <button id="resetWorldBtn" class="pill-button danger">Reset World</button>
+      </div>
+    </header>
+
+    <main class="workspace-grid">
+      <section class="left-panel bauhaus-card">
+        <div class="section-title-row">
+          <h2>Creature Builder</h2>
+          <span class="badge">Max 5 creatures</span>
+        </div>
+
+        <label class="field-group">
+          <span>Name</span>
+          <input id="creatureName" type="text" maxlength="20" value="Piko" />
+        </label>
+
+        <div class="field-grid two-col">
+          <label class="field-group">
+            <span>Body Shape</span>
+            <select id="bodyShape">
+              <option value="round">Round</option>
+              <option value="square">Square</option>
+              <option value="triangle">Triangle</option>
+            </select>
+          </label>
+          <label class="field-group">
+            <span>Color Style</span>
+            <select id="colorStyle">
+              <option value="sunny">Sunny</option>
+              <option value="berry">Berry</option>
+              <option value="mint">Mint</option>
+              <option value="night">Night</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="field-grid two-col">
+          <label class="field-group">
+            <span>Eyes</span>
+            <select id="eyeStyle">
+              <option value="dot">Dot</option>
+              <option value="wide">Wide</option>
+              <option value="sleepy">Sleepy</option>
+            </select>
+          </label>
+          <label class="field-group">
+            <span>Accessory</span>
+            <select id="accessoryStyle">
+              <option value="flag">Flag</option>
+              <option value="antenna">Antenna</option>
+              <option value="crown">Crown</option>
+            </select>
+          </label>
+        </div>
+
+        <label class="field-group">
+          <span>When Maro is near…</span>
+          <select id="nearBehavior">
+            <option value="follow">Follow</option>
+            <option value="flee">Run Away</option>
+            <option value="orbit">Orbit</option>
+            <option value="freeze">Freeze</option>
+            <option value="dance">Dance</option>
+          </select>
+        </label>
+
+        <label class="field-group">
+          <span>Default Motion</span>
+          <select id="idleBehavior">
+            <option value="wander">Wander</option>
+            <option value="bounce">Bounce</option>
+            <option value="patrol">Patrol</option>
+            <option value="rest">Rest</option>
+          </select>
+        </label>
+
+        <label class="field-group range-group">
+          <span>Sensitivity Radius <strong id="radiusValue">120</strong></span>
+          <input id="sensitivityRadius" type="range" min="70" max="220" step="10" value="120" />
+        </label>
+
+        <label class="field-group range-group">
+          <span>Movement Speed <strong id="speedValue">1.0×</strong></span>
+          <input id="speedScale" type="range" min="0.6" max="1.6" step="0.1" value="1.0" />
+        </label>
+
+        <div class="preview-card">
+          <div class="section-title-row compact">
+            <h3>Rule Preview</h3>
+            <button id="surpriseBtn" class="pill-button secondary mini">Surprise Me</button>
+          </div>
+          <pre id="rulePreview" class="pseudocode"></pre>
+        </div>
+
+        <div class="button-row">
+          <button id="releaseBtn" class="pill-button primary">Release Creature</button>
+          <button id="savePresetBtn" class="pill-button secondary">Save Preset</button>
+        </div>
+      </section>
+
+      <section class="center-panel">
+        <div class="stage-head bauhaus-card">
+          <div>
+            <h2>Play Stage</h2>
+            <p>Move Maro with arrow keys or WASD. Click a creature to give it a little hop.</p>
+          </div>
+          <div class="mini-stats">
+            <div class="stat-box">
+              <span class="stat-label">Creatures</span>
+              <strong id="creatureCount">0/5</strong>
+            </div>
+            <div class="stat-box">
+              <span class="stat-label">Selected</span>
+              <strong id="selectedName">None</strong>
+            </div>
+          </div>
+        </div>
+        <div class="canvas-wrap bauhaus-card">
+          <canvas id="labCanvas" width="960" height="540" aria-label="Creature behavior lab"></canvas>
+        </div>
+      </section>
+
+      <section class="right-panel bauhaus-card">
+        <div class="section-title-row">
+          <h2>Lab Notes</h2>
+          <span class="badge blue">Interactive</span>
+        </div>
+
+        <div class="idea-list">
+          <article class="idea-card accent-red">
+            <h3>Try this</h3>
+            <p>Make one shy creature and one friendly creature. What happens when Maro walks between them?</p>
+          </article>
+          <article class="idea-card accent-blue">
+            <h3>Observe</h3>
+            <p>Rules become personality. Changing one rule can make the same creature feel brave, sleepy, or playful.</p>
+          </article>
+          <article class="idea-card accent-yellow">
+            <h3>Create</h3>
+            <p>Can you build a tiny world with a leader, a dancer, and a guard?</p>
+          </article>
+        </div>
+
+        <div class="creature-roster">
+          <div class="section-title-row compact">
+            <h3>Preset Library</h3>
+            <button id="clearPresetsBtn" class="pill-button danger mini">Clear</button>
+          </div>
+          <div id="presetList" class="preset-list empty-state">
+            <p>No presets saved yet.</p>
+          </div>
+        </div>
+
+        <div class="creature-roster">
+          <div class="section-title-row compact">
+            <h3>Live Creatures</h3>
+          </div>
+          <div id="rosterList" class="roster-list empty-state">
+            <p>No creatures released yet.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="ideaDialog" class="dialog-card">
+    <div class="dialog-inner">
+      <div class="section-title-row">
+        <h2>Idea Cards</h2>
+        <button id="closeDialogBtn" class="pill-button secondary mini">Close</button>
+      </div>
+      <div class="dialog-grid">
+        <article class="idea-card accent-red"><h3>Make a Buddy</h3><p>Create a creature that follows Maro everywhere.</p></article>
+        <article class="idea-card accent-blue"><h3>Make a Shy One</h3><p>Create a creature that runs away whenever Maro comes close.</p></article>
+        <article class="idea-card accent-yellow"><h3>Make a Performer</h3><p>Create a creature that freezes, then dances when Maro gets near.</p></article>
+        <article class="idea-card accent-red"><h3>Make a Solar System</h3><p>Release two orbit creatures with different colors and radii.</p></article>
+        <article class="idea-card accent-blue"><h3>Make a Team</h3><p>Release three creatures that all react differently to the same Maro.</p></article>
+        <article class="idea-card accent-yellow"><h3>Make Something Funny</h3><p>Give a square creature dot eyes, a crown, and a dramatic dance rule.</p></article>
+      </div>
+    </div>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>

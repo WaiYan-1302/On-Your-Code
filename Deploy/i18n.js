@@ -5,6 +5,12 @@
 
   const STORAGE_KEY = "on-your-code-language";
   const JA = {
+    "5 PLAYABLE PROJECTS": "遊べる5つのプロジェクト",
+    "CREATURE SANDBOX": "クリーチャーサンドボックス",
+    "CREATIVE CODING · BEHAVIOR RULES": "クリエイティブコーディング・行動ルール",
+    "Creature Behavior Lab": "クリーチャー行動ラボ",
+    "Build tiny creatures, give them rules, and bring their personalities to life.": "小さなクリーチャーを作り、ルールを与えて、個性を生き生きと動かそう。",
+    "ENTER CREATURE LAB": "クリーチャーラボに入る",
     "Skip to adventures": "冒険を選ぶへ移動",
     "ADVENTURE MENU": "アドベンチャーメニュー",
     "LEARN · PLAY · CREATE": "学ぶ・遊ぶ・創る",

@@ -329,10 +329,31 @@ h1 em { color: var(--coral); font-style: normal; }
 .dot-b { right: 12%; bottom: 18%; background: var(--blue); }
 .dot-c { top: 17%; right: 23%; width: 11px; height: 11px; background: var(--yellow); }
 
+.visual-creature { background: var(--yellow); }
+.creature-preview {
+  position: relative;
+  width: 132px;
+  height: 118px;
+  border: 3px solid var(--ink);
+  border-radius: 48% 52% 44% 56%;
+  background: var(--coral);
+  box-shadow: 7px 8px 0 var(--ink);
+  transform: rotate(-3deg);
+}
+.creature-eye { position: absolute; top: 34px; width: 14px; height: 18px; border-radius: 50%; background: var(--ink); }
+.eye-left { left: 35px; }
+.eye-right { right: 35px; }
+.creature-smile { position: absolute; left: 50%; bottom: 28px; width: 34px; height: 16px; border-bottom: 3px solid var(--ink); border-radius: 50%; transform: translateX(-50%); }
+.behavior-chip { position: absolute; padding: 8px 10px; border: 2px solid var(--ink); background: var(--white); box-shadow: 2px 3px 0 var(--ink); font: 900 .67rem monospace; }
+.behavior-a { top: 15%; left: 9%; transform: rotate(-6deg); }
+.behavior-b { top: 19%; right: 8%; transform: rotate(5deg); }
+.behavior-c { right: 13%; bottom: 13%; transform: rotate(-4deg); }
+
 .card-scene-one .card-topline { background: var(--yellow); }
 .card-scene-two .card-topline { background: var(--blue); color: white; }
 .card-challenge .card-topline { background: var(--mint); }
 .card-workshop .card-topline { background: var(--coral); }
+.card-creature .card-topline { background: var(--yellow); }
 
 .card-copy { padding: 24px 25px 20px; }
 .card-copy > p { margin-bottom: 8px; color: #425ed2; }

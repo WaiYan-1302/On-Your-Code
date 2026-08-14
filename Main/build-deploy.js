@@ -70,12 +70,14 @@ const ignoredProjectFiles = new Set([
   "package-lock.json",
   "README.md",
   "INTEGRATION.md",
+  "dist",
 ]);
 
 for (const project of [
   { folder: "Scene 1", output: "scene-1" },
   { folder: "Scene 2", output: "scene-2" },
   { folder: "ChallengeLab", output: "challenge-lab" },
+  { folder: "CreatureLab", output: "creature-lab" },
 ]) {
   copyTree(
     path.join(workspaceRoot, project.folder),
@@ -123,6 +125,7 @@ const required = [
   "scene-1/index.html",
   "scene-2/index.html",
   "challenge-lab/index.html",
+  "creature-lab/index.html",
   "workshop/index.html",
 ];
 
@@ -136,7 +139,7 @@ if (missing.length) {
 }
 
 const mainHtml = fs.readFileSync(path.join(deployRoot, "index.html"), "utf8");
-for (const route of ["./scene-1/", "./scene-2/", "./challenge-lab/", "./workshop/"]) {
+for (const route of ["./scene-1/", "./scene-2/", "./challenge-lab/", "./creature-lab/", "./workshop/"]) {
   if (!mainHtml.includes(`href="${route}"`)) {
     console.error(`Deploy validation failed. Main menu is missing ${route}`);
     process.exit(1);
