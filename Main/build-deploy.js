@@ -1,5 +1,6 @@
 const fs = require("node:fs");
 const path = require("node:path");
+const crypto = require("node:crypto");
 const { spawnSync } = require("node:child_process");
 
 const workspaceRoot = path.resolve(__dirname, "..");
@@ -85,6 +86,35 @@ for (const project of [
 
 copyTree(workshopOutput, path.join(deployRoot, "workshop"));
 fs.writeFileSync(path.join(deployRoot, ".nojekyll"), "");
+
+function versionStaticAssets(directory) {
+  for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+    const filePath = path.join(directory, entry.name);
+    if (entry.isDirectory()) {
+      versionStaticAssets(filePath);
+      continue;
+    }
+    if (!entry.isFile() || path.extname(entry.name).toLowerCase() !== ".html") continue;
+
+    const html = fs.readFileSync(filePath, "utf8");
+    const versioned = html.replace(
+      /((?:src|href)=")(\.\.?\/[^"?]+\.(?:css|js))(?:\?[^"#]*)?("\s*\/?>?)/gi,
+      (match, before, assetUrl, after) => {
+        const assetPath = path.resolve(path.dirname(filePath), assetUrl);
+        if (!assetPath.startsWith(`${deployRoot}${path.sep}`) || !fs.existsSync(assetPath)) return match;
+        const hash = crypto
+          .createHash("sha256")
+          .update(fs.readFileSync(assetPath))
+          .digest("hex")
+          .slice(0, 10);
+        return `${before}${assetUrl}?v=${hash}${after}`;
+      },
+    );
+    fs.writeFileSync(filePath, versioned);
+  }
+}
+
+versionStaticAssets(deployRoot);
 
 const required = [
   "index.html",
