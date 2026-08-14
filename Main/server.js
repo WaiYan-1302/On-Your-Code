@@ -204,6 +204,11 @@ const server = http.createServer(async (request, response) => {
     return;
   }
 
+  if (pathname === "/i18n.js") {
+    serveFile(response, path.join(workspaceRoot, "i18n.js"), workspaceRoot);
+    return;
+  }
+
   const project = projects.find(
     (item) => pathname === item.route.slice(0, -1) || pathname.startsWith(item.route),
   );

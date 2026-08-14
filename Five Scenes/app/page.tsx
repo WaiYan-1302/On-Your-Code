@@ -1,6 +1,7 @@
 "use client";
 
 import { PointerEvent, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import "../../i18n.js";
 
 type CourseScene = 1 | 2;
 type Direction = "N" | "E" | "S" | "W";

@@ -59,6 +59,7 @@ function copyTree(source, destination, ignored = new Set()) {
 for (const file of ["index.html", "styles.css", "app.js"]) {
   copyFile(path.join(__dirname, file), path.join(deployRoot, file));
 }
+copyFile(path.join(workspaceRoot, "i18n.js"), path.join(deployRoot, "i18n.js"));
 
 const ignoredProjectFiles = new Set([
   "node_modules",
