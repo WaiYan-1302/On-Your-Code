@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <title>Opening On Your Code…</title>
+    <script>
+      (function () {
+        const parts = window.location.pathname.split("/").filter(Boolean);
+        const repository = parts.shift();
+        const route = parts.join("/").replace(/\/+$/, "");
+        const scenes = new Set(["scene-1", "scene-2", "challenge-lab", "workshop"]);
+
+        if (repository && scenes.has(route)) {
+          const destination = `/${repository}/Deploy/${route}/${window.location.search}${window.location.hash}`;
+          window.location.replace(destination);
+        }
+      })();
+    </script>
+    <style>
+      body { margin: 0; padding: 40px 20px; background: #f4efe5; color: #17233d; font: 700 16px/1.5 Arial, sans-serif; text-align: center; }
+      a { color: #1558d6; }
+    </style>
+  </head>
+  <body>
+    <h1>Scene not found</h1>
+    <p>The address may be from an older version of the menu.</p>
+    <p><a href="/On-Your-Code/Deploy/">Return to the On Your Code menu</a></p>
+  </body>
+</html>
