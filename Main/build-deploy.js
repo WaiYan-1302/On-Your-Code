@@ -78,6 +78,7 @@ for (const project of [
   { folder: "Scene 2", output: "scene-2" },
   { folder: "ChallengeLab", output: "challenge-lab" },
   { folder: "CreatureLab", output: "creature-lab" },
+  { folder: "MiniWorldSimulator", output: "mini-world-simulator" },
 ]) {
   copyTree(
     path.join(workspaceRoot, project.folder),
@@ -126,6 +127,7 @@ const required = [
   "scene-2/index.html",
   "challenge-lab/index.html",
   "creature-lab/index.html",
+  "mini-world-simulator/index.html",
   "workshop/index.html",
 ];
 
@@ -139,7 +141,7 @@ if (missing.length) {
 }
 
 const mainHtml = fs.readFileSync(path.join(deployRoot, "index.html"), "utf8");
-for (const route of ["./scene-1/", "./scene-2/", "./challenge-lab/", "./creature-lab/", "./workshop/"]) {
+for (const route of ["./scene-1/", "./scene-2/", "./challenge-lab/", "./creature-lab/", "./mini-world-simulator/", "./workshop/"]) {
   if (!mainHtml.includes(`href="${route}"`)) {
     console.error(`Deploy validation failed. Main menu is missing ${route}`);
     process.exit(1);

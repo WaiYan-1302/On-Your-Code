@@ -6,11 +6,17 @@
   const STORAGE_KEY = "on-your-code-language";
   const JA = {
     "5 PLAYABLE PROJECTS": "遊べる5つのプロジェクト",
+    "6 PLAYABLE PROJECTS": "遊べる6つのプロジェクト",
     "CREATURE SANDBOX": "クリーチャーサンドボックス",
     "CREATIVE CODING · BEHAVIOR RULES": "クリエイティブコーディング・行動ルール",
     "Creature Behavior Lab": "クリーチャー行動ラボ",
     "Build tiny creatures, give them rules, and bring their personalities to life.": "小さなクリーチャーを作り、ルールを与えて、個性を生き生きと動かそう。",
     "ENTER CREATURE LAB": "クリーチャーラボに入る",
+    "LIVING SIMULATION": "生きているシミュレーション",
+    "MARO'S WORKSHOP 2 · SIMULATION": "マロのワークショップ2・シミュレーション",
+    "Mini World Simulator": "ミニワールドシミュレーター",
+    "Place plants, creatures, ponds, and beacons, then change the rules and watch your world evolve.": "植物、クリーチャー、池、ビーコンを置き、ルールを変えて世界が育つ様子を観察しよう。",
+    "BUILD A MINI WORLD": "ミニワールドを作る",
     "Skip to adventures": "冒険を選ぶへ移動",
     "ADVENTURE MENU": "アドベンチャーメニュー",
     "LEARN · PLAY · CREATE": "学ぶ・遊ぶ・創る",

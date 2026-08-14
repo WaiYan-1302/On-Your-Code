@@ -349,11 +349,27 @@ h1 em { color: var(--coral); font-style: normal; }
 .behavior-b { top: 19%; right: 8%; transform: rotate(5deg); }
 .behavior-c { right: 13%; bottom: 13%; transform: rotate(-4deg); }
 
+.visual-mini-world { overflow: hidden; background: var(--mint); }
+.world-orbit { position: absolute; width: 245px; height: 130px; border: 3px dashed var(--ink); border-radius: 50%; opacity: .35; transform: rotate(-10deg); }
+.world-pond { position: absolute; right: 9%; bottom: 12%; width: 105px; height: 58px; border: 3px solid var(--ink); border-radius: 50%; background: var(--blue); transform: rotate(-8deg); }
+.world-plant { position: absolute; width: 24px; height: 50px; border: 3px solid var(--ink); border-radius: 50% 50% 45% 45%; background: var(--yellow); transform-origin: bottom center; }
+.world-plant::after { content: ""; position: absolute; left: 50%; top: 45px; width: 3px; height: 28px; background: var(--ink); transform: translateX(-50%); }
+.plant-one { left: 16%; bottom: 21%; transform: rotate(-9deg); }
+.plant-two { right: 23%; top: 15%; transform: scale(.78) rotate(8deg); }
+.world-creature { position: absolute; width: 62px; height: 48px; border: 3px solid var(--ink); background: var(--coral); box-shadow: 4px 5px 0 var(--ink); }
+.world-creature::before, .world-creature::after { content: ""; position: absolute; top: 13px; width: 7px; height: 9px; border-radius: 50%; background: var(--ink); }
+.world-creature::before { left: 15px; }
+.world-creature::after { right: 15px; }
+.creature-one { left: 38%; top: 24%; border-radius: 50%; transform: rotate(5deg); }
+.creature-two { left: 30%; bottom: 14%; width: 50px; height: 50px; background: var(--yellow); transform: rotate(-7deg); }
+.world-beacon { position: absolute; right: 17%; top: 20%; display: grid; width: 48px; height: 48px; place-items: center; border: 3px solid var(--ink); border-radius: 50%; background: var(--white); box-shadow: 4px 5px 0 var(--ink); color: var(--coral); font-size: 1.8rem; font-weight: 950; }
+
 .card-scene-one .card-topline { background: var(--yellow); }
 .card-scene-two .card-topline { background: var(--blue); color: white; }
 .card-challenge .card-topline { background: var(--mint); }
 .card-workshop .card-topline { background: var(--coral); }
 .card-creature .card-topline { background: var(--yellow); }
+.card-mini-world .card-topline { background: var(--blue); color: white; }
 
 .card-copy { padding: 24px 25px 20px; }
 .card-copy > p { margin-bottom: 8px; color: #425ed2; }

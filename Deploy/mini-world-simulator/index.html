@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Maro's Workshop 2 — Mini World Simulator</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="page-shell">
+    <header class="topbar bauhaus-card">
+      <div>
+        <p class="eyebrow">ON YOUR CODE · MARO'S WORKSHOP 2</p>
+        <h1>Mini World Simulator</h1>
+        <p class="subtext">Place things. Set the rules. Press play. See what kind of world you made.</p>
+      </div>
+      <div class="header-actions">
+        <button id="ideaBtn" class="pill-button secondary">Idea Cards</button>
+        <button id="pauseBtn" class="pill-button primary">Pause</button>
+        <button id="resetBtn" class="pill-button danger">Reset World</button>
+      </div>
+    </header>
+
+    <main class="workspace-grid">
+      <aside class="left-panel bauhaus-card">
+        <div class="section-title-row">
+          <h2>Build the World</h2>
+          <span class="badge">Click stage to place</span>
+        </div>
+
+        <div class="tool-grid" id="toolGrid">
+          <button class="tool-card selected" data-tool="plant">
+            <span class="tool-icon plant-icon"></span>
+            <strong>Plant</strong>
+            <small>Grows food</small>
+          </button>
+          <button class="tool-card" data-tool="muncher">
+            <span class="tool-icon muncher-icon"></span>
+            <strong>Muncher</strong>
+            <small>Looks for food</small>
+          </button>
+          <button class="tool-card" data-tool="drifter">
+            <span class="tool-icon drifter-icon"></span>
+            <strong>Drifter</strong>
+            <small>Wanders around</small>
+          </button>
+          <button class="tool-card" data-tool="beacon">
+            <span class="tool-icon beacon-icon"></span>
+            <strong>Beacon</strong>
+            <small>Attracts drifters</small>
+          </button>
+          <button class="tool-card" data-tool="pond">
+            <span class="tool-icon pond-icon"></span>
+            <strong>Pond</strong>
+            <small>Slows creatures</small>
+          </button>
+          <button class="tool-card erase" data-tool="erase">
+            <span class="tool-icon erase-icon">×</span>
+            <strong>Erase</strong>
+            <small>Remove an item</small>
+          </button>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="section-title-row compact">
+          <h3>World Rules</h3>
+          <button id="surpriseBtn" class="pill-button secondary mini">Surprise Me</button>
+        </div>
+
+        <label class="field-group range-group">
+          <span>Food grows every <strong id="foodRateValue">5s</strong></span>
+          <input id="foodRate" type="range" min="2" max="10" step="1" value="5" />
+        </label>
+
+        <label class="field-group range-group">
+          <span>Creature speed <strong id="speedValue">1.0×</strong></span>
+          <input id="creatureSpeed" type="range" min="0.6" max="1.6" step="0.1" value="1.0" />
+        </label>
+
+        <label class="field-group range-group">
+          <span>Beacon pull <strong id="beaconValue">Medium</strong></span>
+          <input id="beaconPower" type="range" min="0" max="2" step="1" value="1" />
+        </label>
+
+        <label class="field-group">
+          <span>When Maro gets close</span>
+          <select id="maroReaction">
+            <option value="ignore">Ignore Maro</option>
+            <option value="follow">Follow Maro</option>
+            <option value="flee">Move Away</option>
+          </select>
+        </label>
+
+        <div class="preview-card">
+          <h3>World Rules</h3>
+          <pre id="rulePreview" class="pseudocode"></pre>
+        </div>
+
+        <div class="preset-row">
+          <button class="pill-button secondary mini" data-preset="garden">Garden</button>
+          <button class="pill-button secondary mini" data-preset="busy">Busy World</button>
+          <button class="pill-button secondary mini" data-preset="quiet">Quiet World</button>
+        </div>
+      </aside>
+
+      <section class="center-panel">
+        <div class="stage-head bauhaus-card">
+          <div>
+            <h2>Your Little World</h2>
+            <p>Move Maro with arrow keys / WASD. Place objects by choosing a tool, then clicking the stage.</p>
+          </div>
+          <div class="stats-row">
+            <div class="stat-box"><span>Day</span><strong id="dayStat">1</strong></div>
+            <div class="stat-box"><span>Creatures</span><strong id="creatureStat">0</strong></div>
+            <div class="stat-box"><span>Plants</span><strong id="plantStat">0</strong></div>
+            <div class="stat-box"><span>Food eaten</span><strong id="foodStat">0</strong></div>
+          </div>
+        </div>
+
+        <div class="canvas-wrap bauhaus-card">
+          <canvas id="worldCanvas" width="960" height="560"></canvas>
+        </div>
+
+        <div class="bottom-note bauhaus-card">
+          <strong>Programming idea:</strong>
+          <span>You are not telling every creature where to go. You are deciding the rules they follow.</span>
+        </div>
+      </section>
+
+      <aside class="right-panel bauhaus-card">
+        <div class="section-title-row">
+          <h2>World Notebook</h2>
+          <span class="badge blue">Live</span>
+        </div>
+
+        <div class="idea-list">
+          <article class="idea-card accent-red">
+            <h3>Can it survive?</h3>
+            <p>Try 2 plants and 5 munchers. Does everyone find enough food?</p>
+          </article>
+          <article class="idea-card accent-blue">
+            <h3>Change one rule</h3>
+            <p>Keep the same world, then change only food growth speed. What changes?</p>
+          </article>
+          <article class="idea-card accent-yellow">
+            <h3>Make a social world</h3>
+            <p>Add beacons and choose “Follow Maro.” Can you gather the creatures together?</p>
+          </article>
+        </div>
+
+        <div class="log-card">
+          <div class="section-title-row compact">
+            <h3>What is happening?</h3>
+            <button id="clearLogBtn" class="pill-button secondary mini">Clear</button>
+          </div>
+          <div id="eventLog" class="event-log"></div>
+        </div>
+
+        <div class="legend-card">
+          <h3>World Pieces</h3>
+          <div class="legend-row"><span class="legend-dot plant"></span><span>Plant — grows food</span></div>
+          <div class="legend-row"><span class="legend-dot muncher"></span><span>Muncher — seeks ripe plants</span></div>
+          <div class="legend-row"><span class="legend-dot drifter"></span><span>Drifter — wanders / follows beacons</span></div>
+          <div class="legend-row"><span class="legend-dot beacon"></span><span>Beacon — attracts drifters</span></div>
+          <div class="legend-row"><span class="legend-dot pond"></span><span>Pond — slows moving creatures</span></div>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <dialog id="ideaDialog" class="dialog-card">
+    <div class="dialog-inner">
+      <div class="section-title-row">
+        <h2>Mini World Ideas</h2>
+        <button id="closeDialogBtn" class="pill-button secondary mini">Close</button>
+      </div>
+      <div class="dialog-grid">
+        <article class="idea-card accent-red"><h3>Balanced Garden</h3><p>3 plants, 2 munchers, normal food growth.</p></article>
+        <article class="idea-card accent-blue"><h3>Hungry World</h3><p>1 plant, 5 munchers, slow food growth.</p></article>
+        <article class="idea-card accent-yellow"><h3>Magnet City</h3><p>4 drifters and 2 beacons with strong beacon pull.</p></article>
+        <article class="idea-card accent-red"><h3>Maro Fan Club</h3><p>Make creatures follow Maro and walk around the stage.</p></article>
+        <article class="idea-card accent-blue"><h3>Island World</h3><p>Use ponds to create slow zones and place food between them.</p></article>
+        <article class="idea-card accent-yellow"><h3>Your Own Experiment</h3><p>Build any world, then change exactly one rule and compare.</p></article>
+      </div>
+    </div>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>

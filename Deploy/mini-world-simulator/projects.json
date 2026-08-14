@@ -1,0 +1,12 @@
+{
+  "projects": [
+    {
+      "id": "maro-mini-world-simulator",
+      "title": "Maro's Workshop 2 — Mini World Simulator",
+      "type": "interactive-scene",
+      "theme": ["Bauhaus", "Maro-kun", "Simulation", "Creative Coding"],
+      "description": "Build a small world with plants, creatures, beacons and ponds, then change rules and observe the simulation.",
+      "status": "ready"
+    }
+  ]
+}
