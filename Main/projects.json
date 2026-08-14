@@ -1,0 +1,31 @@
+[
+  {
+    "id": "scene-1",
+    "name": "Scene 1",
+    "route": "/scene-1/",
+    "folder": "Scene 1",
+    "type": "static"
+  },
+  {
+    "id": "scene-2",
+    "name": "Scene 2",
+    "route": "/scene-2/",
+    "folder": "Scene 2",
+    "type": "static"
+  },
+  {
+    "id": "challenge-lab",
+    "name": "Challenge Lab",
+    "route": "/challenge-lab/",
+    "folder": "ChallengeLab",
+    "type": "static"
+  },
+  {
+    "id": "workshop",
+    "name": "Maro's Workshop",
+    "route": "/workshop/",
+    "folder": "Five Scenes",
+    "type": "vite",
+    "port": 4174
+  }
+]

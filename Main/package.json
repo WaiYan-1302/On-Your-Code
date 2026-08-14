@@ -1,0 +1,17 @@
+{
+  "name": "on-your-code-main",
+  "version": "1.0.0",
+  "private": true,
+  "description": "One local entry point for every On Your Code module.",
+  "scripts": {
+    "setup": "node setup.js",
+    "start": "node server.js",
+    "dev": "node server.js",
+    "check": "node --check server.js && node --check setup.js && node --check build-deploy.js && node --check preview-deploy.js",
+    "deploy:build": "node build-deploy.js",
+    "deploy:preview": "node preview-deploy.js"
+  },
+  "engines": {
+    "node": ">=22.13.0"
+  }
+}

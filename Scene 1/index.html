@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="On Your Code — a tiny creative coding playground."
+    />
+    <title>On Your Code</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./code-viewer.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">ON YOUR MARK</p>
+          <h1>On Your Code</h1>
+        </div>
+        <div class="level-pill">PLAYGROUND 01</div>
+      </header>
+
+      <section class="game-card" aria-label="Game board">
+        <div class="board-wrap">
+          <div id="board" class="board" aria-label="5 by 5 tile board"></div>
+          <div
+            id="mascot"
+            class="mascot is-idle"
+            data-direction="E"
+            aria-label="Maro at column 1, row 3, facing east"
+          >
+            <span class="mascot-sprite" aria-hidden="true"></span>
+            <span class="direction-arrow" aria-hidden="true">➤</span>
+          </div>
+        </div>
+        <p id="status" class="status" aria-live="polite">
+          Build a program for Maro.
+        </p>
+      </section>
+
+      <section class="program-card" aria-labelledby="program-title">
+        <div class="section-heading">
+          <div>
+            <p class="step-label">1 · BUILD</p>
+            <h2 id="program-title">Your commands</h2>
+          </div>
+          <button id="clear-button" class="text-button" type="button">
+            Clear commands
+          </button>
+        </div>
+
+        <ol id="command-list" class="command-list" aria-label="Command list">
+          <li class="empty-program">Tap a command to begin.</li>
+        </ol>
+
+        <p class="command-hint">
+          Maro moves forward in the direction he is facing.
+        </p>
+
+        <div class="command-palette" aria-label="Add a command">
+          <button class="command-button move" data-command="MOVE" type="button">
+            <span class="command-icon">↑</span>
+            <strong>Move forward</strong>
+            <small>1 tile</small>
+          </button>
+          <button class="command-button turn-left" data-command="TURN_LEFT" type="button">
+            <span class="command-icon">↶</span>
+            <strong>Turn left</strong>
+            <small>turn only</small>
+          </button>
+          <button class="command-button turn-right" data-command="TURN_RIGHT" type="button">
+            <span class="command-icon">↷</span>
+            <strong>Turn right</strong>
+            <small>turn only</small>
+          </button>
+        </div>
+      </section>
+
+      <section class="control-card" aria-label="Program controls">
+        <p class="step-label">2 · TRY IT</p>
+        <div class="controls">
+          <button id="run-button" class="primary-control" type="button">
+            ▶ Run all commands
+          </button>
+          <button id="step-button" class="control-button" type="button">
+            <span>▶|</span>
+            Next step
+          </button>
+          <button id="reset-button" class="control-button reset-control" type="button">
+            <span>⌂</span>
+            Reset Maro
+            <small>keeps commands</small>
+          </button>
+          <button id="undo-button" class="control-button" type="button">
+            <span>↶</span>
+            Undo
+          </button>
+        </div>
+        <p class="control-help">
+          <strong>Reset Maro</strong> returns him to the start.
+          <strong>Clear commands</strong> removes the program.
+        </p>
+      </section>
+    </main>
+
+    <script type="module" src="./js/app.js"></script>
+    <script type="module" src="./code-viewer.js"></script>
+  </body>
+</html>

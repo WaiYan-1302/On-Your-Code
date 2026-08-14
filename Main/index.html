@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Choose an On Your Code adventure and learn creative coding with Maro."
+    />
+    <meta name="theme-color" content="#f4efe5" />
+    <title>On Your Code · Adventure Menu</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#adventures">Skip to adventures</a>
+
+    <div class="page-shell">
+      <header class="site-header">
+        <a class="brand" href="./" aria-label="On Your Code home">
+          <span class="brand-mark" aria-hidden="true">
+            <i></i><i></i><i></i>
+          </span>
+          <span>ON YOUR CODE</span>
+        </a>
+        <span class="menu-label">ADVENTURE MENU</span>
+      </header>
+
+      <main>
+        <section class="hero" aria-labelledby="page-title">
+          <div class="hero-copy">
+            <p class="eyebrow">LEARN · PLAY · CREATE</p>
+            <h1 id="page-title">Where will your<br /><em>code</em> take you?</h1>
+            <p class="intro">
+              Start with a single command. End by turning your own ideas into
+              interactive art. Choose any adventure below.
+            </p>
+          </div>
+
+          <div class="hero-art" aria-hidden="true">
+            <div class="orbit orbit-one"></div>
+            <div class="orbit orbit-two"></div>
+            <div class="code-token token-move">MOVE</div>
+            <div class="code-token token-loop">↻ 4×</div>
+            <div class="maro-window"><span class="maro-sprite"></span></div>
+            <span class="spark spark-one">✦</span>
+            <span class="spark spark-two">✦</span>
+          </div>
+        </section>
+
+        <section id="adventures" class="adventure-section" aria-labelledby="adventure-title">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">4 PLAYABLE PROJECTS</p>
+              <h2 id="adventure-title">Choose your adventure</h2>
+            </div>
+            <p>Play in order or jump to the project that sparks your curiosity.</p>
+          </div>
+
+          <div class="adventure-grid">
+            <a class="adventure-card card-scene-one" href="./scene-1/" aria-label="Play Scene 1, First Steps">
+              <div class="card-topline">
+                <span class="level-number">01</span>
+                <span class="level-tag">START HERE</span>
+              </div>
+              <div class="card-visual visual-grid" aria-hidden="true">
+                <div class="mini-board">
+                  <i></i><i></i><i></i><i></i><i></i>
+                  <span class="route route-a"></span>
+                  <span class="route route-b"></span>
+                  <span class="mini-maro"></span>
+                  <b>✦</b>
+                </div>
+              </div>
+              <div class="card-copy">
+                <p>SCENE 1 · COMMANDS</p>
+                <h3>First Steps</h3>
+                <span>Build your first program and guide Maro across the board.</span>
+              </div>
+              <div class="card-action"><span>PLAY SCENE 1</span><b aria-hidden="true">→</b></div>
+            </a>
+
+            <a class="adventure-card card-scene-two" href="./scene-2/" aria-label="Play Scene 2, Think Ahead">
+              <div class="card-topline">
+                <span class="level-number">02</span>
+                <span class="level-tag">3 CHALLENGES</span>
+              </div>
+              <div class="card-visual visual-debug" aria-hidden="true">
+                <div class="command-stack">
+                  <span><i>1</i> MOVE</span>
+                  <span><i>2</i> TURN RIGHT</span>
+                  <span class="wrong"><i>3</i> MOVE <b>×</b></span>
+                  <span class="fixed"><i>3</i> TURN LEFT <b>✓</b></span>
+                </div>
+              </div>
+              <div class="card-copy">
+                <p>SCENE 2 · DEBUG</p>
+                <h3>Think Ahead</h3>
+                <span>Predict, repair, and discover how repeat makes code powerful.</span>
+              </div>
+              <div class="card-action"><span>PLAY SCENE 2</span><b aria-hidden="true">→</b></div>
+            </a>
+
+            <a class="adventure-card card-challenge" href="./challenge-lab/" aria-label="Open Challenge Lab">
+              <div class="card-topline">
+                <span class="level-number">03</span>
+                <span class="level-tag">10 MISSIONS</span>
+              </div>
+              <div class="card-visual visual-lab" aria-hidden="true">
+                <div class="lab-ring ring-a"></div>
+                <div class="lab-ring ring-b"></div>
+                <div class="lab-core">?</div>
+                <span class="lab-chip chip-a">IF</span>
+                <span class="lab-chip chip-b">LOOP</span>
+                <span class="lab-chip chip-c">x = 4</span>
+              </div>
+              <div class="card-copy">
+                <p>SMART LAB · PROBLEM SOLVING</p>
+                <h3>Challenge Lab</h3>
+                <span>Level up with algorithms, variables, functions, and logic.</span>
+              </div>
+              <div class="card-action"><span>ENTER THE LAB</span><b aria-hidden="true">→</b></div>
+            </a>
+
+            <a class="adventure-card card-workshop" href="./workshop/" aria-label="Open Maro's Workshop">
+              <div class="card-topline">
+                <span class="level-number">04</span>
+                <span class="level-tag">2 CREATIVE SCENES</span>
+              </div>
+              <div class="card-visual visual-art" aria-hidden="true">
+                <svg viewBox="0 0 300 170" role="presentation">
+                  <path d="M23 93 C67 7, 89 161, 133 70 S205 8, 277 93" />
+                  <path d="M22 110 C67 25, 90 177, 135 87 S207 25, 278 110" />
+                  <circle cx="151" cy="83" r="35" />
+                  <circle cx="151" cy="83" r="17" />
+                </svg>
+                <span class="art-dot dot-a"></span>
+                <span class="art-dot dot-b"></span>
+                <span class="art-dot dot-c"></span>
+              </div>
+              <div class="card-copy">
+                <p>CREATIVE CODING · ALGORITHM ART</p>
+                <h3>Maro's Workshop</h3>
+                <span>Turn motion, patterns, and your own marks into living art.</span>
+              </div>
+              <div class="card-action"><span>OPEN THE WORKSHOP</span><b aria-hidden="true">→</b></div>
+            </a>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <span>ON YOUR MARK</span>
+        <p>Small commands. Big ideas.</p>
+        <div aria-hidden="true"><i></i><i></i><i></i></div>
+      </footer>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

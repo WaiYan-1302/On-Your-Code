@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="On Your Code Smart Lab — ten rising algorithm-thinking challenges." />
+  <title>On Your Code · Smart Lab</title>
+  <link rel="stylesheet" href="./styles.css" />
+  <link rel="stylesheet" href="./code-viewer.css" />
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">ON YOUR MARK</p>
+        <h1>On Your Code</h1>
+      </div>
+      <div class="day-pill">DAY 2+</div>
+    </header>
+
+    <section class="scene-switch" aria-label="Day 2 scenes">
+      <div class="scene-tab muted"><span>DAY 2</span><strong>Guided</strong><small>Sequence · Debug · Repeat</small></div>
+      <div class="scene-tab active"><span>NEXT SCENE</span><strong>Smart Lab</strong><small>10 problem-solving missions</small></div>
+    </section>
+
+    <nav id="challenge-progress" class="challenge-progress" aria-label="Challenge progress"></nav>
+
+    <section class="mission-card" aria-labelledby="mission-title">
+      <div class="mission-number" id="mission-number">CHALLENGE 1 OF 10</div>
+      <h2 id="mission-title">Order matters</h2>
+      <p id="mission-copy"></p>
+      <div class="mission-meta">
+        <span id="difficulty-label">LEVEL 1</span>
+        <span id="concept-label">Sequence</span>
+      </div>
+    </section>
+
+    <section class="game-card" aria-label="Challenge workspace">
+      <div class="board-wrap">
+        <div id="board" class="board" aria-label="5 by 5 board">
+          <div id="mascot" class="mascot" data-direction="E" aria-label="Maro-kun">
+            <span class="mascot-sprite" aria-hidden="true"></span>
+          </div>
+        </div>
+      </div>
+      <p id="board-note" class="board-note"></p>
+      <p id="status" class="status" aria-live="polite">Choose your first instruction.</p>
+    </section>
+
+    <section class="program-card" aria-labelledby="workspace-title">
+      <div class="section-heading">
+        <div><p class="step-label">THINK → TEST → CHANGE</p><h2 id="workspace-title">Your algorithm</h2></div>
+        <button id="reset-button" class="text-button" type="button">Reset</button>
+      </div>
+      <div id="workspace" class="workspace"></div>
+    </section>
+
+    <section class="controls" aria-label="Challenge controls">
+      <button id="run-button" class="run-button" type="button">▶ Test algorithm</button>
+      <button id="hint-button" class="control-button" type="button">? Hint</button>
+    </section>
+
+    <section id="explanation-card" class="explanation-card" hidden aria-live="polite">
+      <div class="success-mark">✓</div>
+      <div>
+        <p class="step-label">NEW IDEA UNLOCKED</p>
+        <h2 id="explanation-title"></h2>
+        <p id="explanation-copy"></p>
+        <button id="next-button" type="button">Next challenge →</button>
+      </div>
+    </section>
+
+    <footer class="footer-note">No typing. No syntax traps. Solve by predicting, testing, and revising.</footer>
+  </main>
+  <script type="module" src="./js/app.js"></script>
+  <script type="module" src="./code-viewer.js"></script>
+</body>
+</html>

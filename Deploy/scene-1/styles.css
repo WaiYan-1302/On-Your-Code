@@ -1,0 +1,587 @@
+:root {
+  --ink: #17233d;
+  --paper: #f6f1e8;
+  --card: #fffdf8;
+  --line: #17233d;
+  --blue: #5578ff;
+  --yellow: #ffc857;
+  --coral: #ff6b5f;
+  --mint: #72d6b3;
+  --tile-a: #fffaf0;
+  --tile-b: #eee7d9;
+  --shadow: 5px 6px 0 var(--ink);
+  font-family: Inter, ui-rounded, "Hiragino Kaku Gothic ProN", system-ui, sans-serif;
+  color: var(--ink);
+  background: var(--paper);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100dvh;
+  background:
+    radial-gradient(circle at 10% 5%, rgba(255, 200, 87, 0.32) 0 6rem, transparent 6.1rem),
+    radial-gradient(circle at 100% 35%, rgba(85, 120, 255, 0.18) 0 8rem, transparent 8.1rem),
+    var(--paper);
+  -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  touch-action: manipulation;
+}
+
+.app-shell {
+  width: min(100%, 430px);
+  min-height: 100dvh;
+  margin: 0 auto;
+  padding:
+    max(18px, env(safe-area-inset-top))
+    max(14px, env(safe-area-inset-right))
+    max(32px, env(safe-area-inset-bottom))
+    max(14px, env(safe-area-inset-left));
+}
+
+.topbar,
+.section-heading,
+.controls {
+  display: flex;
+  align-items: center;
+}
+
+.topbar,
+.section-heading {
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.eyebrow,
+.step-label {
+  margin: 0;
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 0.13em;
+}
+
+h1,
+h2 {
+  margin: 0;
+  line-height: 1;
+}
+
+h1 {
+  margin-top: 4px;
+  font-size: clamp(1.75rem, 8vw, 2.5rem);
+  letter-spacing: -0.055em;
+}
+
+h2 {
+  margin-top: 5px;
+  font-size: 1.2rem;
+}
+
+.level-pill {
+  padding: 9px 11px;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  background: var(--yellow);
+  font-size: 0.66rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+.game-card,
+.program-card,
+.control-card {
+  margin-top: 18px;
+  border: 2px solid var(--ink);
+  border-radius: 20px;
+  background: var(--card);
+  box-shadow: var(--shadow);
+}
+
+.game-card {
+  padding: 14px 14px 10px;
+}
+
+.board-wrap {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  aspect-ratio: 1;
+  border: 2px solid var(--ink);
+  border-radius: 13px;
+  background: var(--tile-a);
+}
+
+.board {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+}
+
+.tile {
+  border-right: 1px solid rgba(23, 35, 61, 0.3);
+  border-bottom: 1px solid rgba(23, 35, 61, 0.3);
+  background: var(--tile-a);
+}
+
+.tile:nth-child(even) {
+  background: var(--tile-b);
+}
+
+.mascot {
+  --x: 0;
+  --y: 2;
+  --rotation: 90deg;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  width: 20%;
+  height: 20%;
+  transform: translate(calc(var(--x) * 100%), calc(var(--y) * 100%));
+  transition: transform 540ms cubic-bezier(0.45, 0, 0.55, 1);
+  will-change: transform;
+  z-index: 2;
+}
+
+.mascot-sprite {
+  --sprite-row: 0%;
+  position: absolute;
+  bottom: 3%;
+  left: 50%;
+  display: block;
+  width: 94%;
+  height: 94%;
+  background-image: url("./assets/characters/maro/maro-walk-4directions-4frames-128-v2.png");
+  background-repeat: no-repeat;
+  background-position: 100% var(--sprite-row);
+  background-size: 400% 400%;
+  image-rendering: auto;
+  transform: translateX(-50%);
+  transform-origin: center bottom;
+  will-change: background-position, transform;
+}
+
+.mascot[data-direction="E"] .mascot-sprite {
+  --sprite-row: 33.333%;
+}
+
+.mascot[data-direction="W"] .mascot-sprite {
+  --sprite-row: 100%;
+}
+
+.mascot[data-direction="N"] .mascot-sprite {
+  --sprite-row: 0%;
+}
+
+.mascot[data-direction="S"] .mascot-sprite {
+  --sprite-row: 66.667%;
+}
+
+.mascot.is-walking .mascot-sprite {
+  animation: maro-walk 270ms linear infinite;
+}
+
+.mascot.is-idle .mascot-sprite {
+  animation: none;
+  background-position: 100% var(--sprite-row);
+}
+
+@keyframes maro-walk {
+  0%,
+  33.332% {
+    background-position: 0 var(--sprite-row);
+  }
+
+  33.333%,
+  66.665% {
+    background-position: 33.333% var(--sprite-row);
+  }
+
+  66.666%,
+  100% {
+    background-position: 66.667% var(--sprite-row);
+  }
+}
+
+.direction-arrow {
+  position: absolute;
+  top: 1%;
+  left: 50%;
+  z-index: 3;
+  width: 1.35em;
+  height: 1.35em;
+  transform: translate(-50%, -42%) rotate(var(--rotation));
+  transform-origin: center;
+  transition: transform 240ms ease;
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
+  background: var(--card);
+  color: var(--blue);
+  font-size: clamp(0.65rem, 3vw, 0.82rem);
+  font-weight: 1000;
+  line-height: 1.08em;
+  text-align: center;
+  box-shadow: 1.5px 1.5px 0 var(--ink);
+}
+
+.mascot.bump {
+  animation: bump 260ms ease;
+}
+
+@keyframes bump {
+  50% {
+    filter: saturate(1.8);
+    scale: 0.88;
+  }
+}
+
+.status {
+  min-height: 1.35em;
+  margin: 9px 4px 0;
+  text-align: center;
+  font-size: 0.82rem;
+  font-weight: 750;
+}
+
+.program-card,
+.control-card {
+  padding: 16px;
+}
+
+.text-button {
+  min-height: 38px;
+  padding: 7px 9px;
+  border: 1.5px solid var(--ink);
+  border-radius: 9px;
+  background: #fff;
+  font-size: 0.8rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.command-list {
+  display: flex;
+  overflow-x: auto;
+  min-height: 54px;
+  margin: 14px 0;
+  padding: 5px 3px 8px;
+  gap: 8px;
+  list-style-position: inside;
+  scrollbar-width: thin;
+}
+
+.command-item,
+.empty-program {
+  flex: 0 0 auto;
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+  background: #fff;
+  font-size: 0.76rem;
+  font-weight: 850;
+}
+
+.command-item {
+  padding: 10px 11px;
+  counter-increment: command;
+  transition:
+    transform 150ms ease,
+    background 150ms ease;
+}
+
+.command-item::before {
+  content: counter(command) " · ";
+  color: rgba(23, 35, 61, 0.58);
+}
+
+.command-item.active {
+  transform: translateY(-4px);
+  background: var(--yellow);
+  box-shadow: 3px 3px 0 var(--ink);
+}
+
+.command-item.done {
+  opacity: 0.45;
+}
+
+.empty-program {
+  width: 100%;
+  padding: 10px;
+  border-style: dashed;
+  color: rgba(23, 35, 61, 0.6);
+  text-align: center;
+}
+
+.command-hint {
+  margin: -2px 2px 11px;
+  color: rgba(23, 35, 61, 0.72);
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.35;
+  text-align: center;
+}
+
+.command-palette {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.command-button,
+.control-button,
+.primary-control {
+  min-height: 46px;
+  border: 2px solid var(--ink);
+  border-radius: 11px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.command-button {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 7px;
+  padding: 9px 10px;
+  background: #fff;
+  font-size: 0.76rem;
+  line-height: 1.05;
+  text-align: left;
+}
+
+.command-button .command-icon {
+  grid-row: 1 / 3;
+  align-self: center;
+  font-size: 1.35rem;
+}
+
+.command-button strong,
+.command-button small {
+  display: block;
+}
+
+.command-button small {
+  margin-top: 3px;
+  color: rgba(23, 35, 61, 0.66);
+  font-size: 0.66rem;
+  font-weight: 750;
+}
+
+.command-button.move {
+  grid-column: 1 / -1;
+}
+
+.command-button.move {
+  background: var(--mint);
+}
+
+.command-button.turn-left {
+  background: var(--yellow);
+}
+
+.command-button.turn-right {
+  background: #aebdff;
+}
+
+.control-card .step-label {
+  margin-bottom: 10px;
+}
+
+.controls {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.primary-control {
+  grid-column: 1 / -1;
+  min-height: 50px;
+  background: var(--coral);
+  color: #fff;
+  text-shadow: 1px 1px 0 var(--ink);
+}
+
+.control-button {
+  display: flex;
+  min-height: 58px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 4px;
+  background: #fff;
+  font-size: 0.73rem;
+  line-height: 1.15;
+  text-align: center;
+}
+
+.control-button > span {
+  margin-bottom: 2px;
+  font-size: 1rem;
+}
+
+.control-button small {
+  margin-top: 3px;
+  color: rgba(23, 35, 61, 0.62);
+  font-size: 0.57rem;
+  font-weight: 750;
+}
+
+.reset-control {
+  background: #fff4d7;
+}
+
+.control-help {
+  margin: 10px 2px 0;
+  color: rgba(23, 35, 61, 0.72);
+  font-size: 0.67rem;
+  line-height: 1.4;
+  text-align: center;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  filter: grayscale(0.25);
+  opacity: 0.5;
+}
+
+@media (min-width: 600px) {
+  body {
+    padding-block: 28px;
+  }
+
+  .app-shell {
+    min-height: calc(100dvh - 56px);
+    border: 3px solid var(--ink);
+    border-radius: 32px;
+    background: rgba(246, 241, 232, 0.94);
+    box-shadow: 9px 11px 0 var(--ink);
+  }
+}
+
+button:active {
+  transform: translateY(2px);
+}
+
+button:focus-visible {
+  outline: 4px solid rgba(85, 120, 255, 0.4);
+  outline-offset: 2px;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  filter: grayscale(0.8);
+  opacity: 0.45;
+}
+
+@media (min-width: 600px) {
+  body {
+    display: grid;
+    place-items: start center;
+    padding: 28px;
+  }
+
+  .app-shell {
+    min-height: auto;
+    padding: 22px 18px 38px;
+    border: 2px solid var(--ink);
+    border-radius: 34px;
+    background:
+      radial-gradient(circle at 10% 5%, rgba(255, 200, 87, 0.26) 0 5rem, transparent 5.1rem),
+      var(--paper);
+    box-shadow: 10px 12px 0 var(--ink);
+  }
+}
+
+@media (max-width: 370px) {
+  .app-shell {
+    padding-inline: 10px;
+  }
+
+  .game-card,
+  .program-card,
+  .control-card {
+    margin-top: 13px;
+  }
+
+  .game-card {
+    padding: 10px 10px 8px;
+  }
+
+  .program-card,
+  .control-card {
+    padding: 13px;
+  }
+
+  .command-button,
+  .control-button,
+  .primary-control {
+    min-height: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mascot,
+  .direction-arrow,
+  .command-item {
+    transition-duration: 1ms;
+  }
+
+  .mascot.is-walking .mascot-sprite {
+    animation-duration: 540ms;
+  }
+}
+
+@media (min-width: 760px) {
+  .app-shell {
+    width: min(94vw, 900px);
+    display: grid;
+    grid-template-columns: minmax(350px, 1fr) minmax(320px, 0.85fr);
+    grid-template-areas:
+      "header header"
+      "game program"
+      "game control";
+    gap: 18px;
+  }
+
+  .topbar {
+    grid-area: header;
+  }
+
+  .game-card {
+    grid-area: game;
+    margin-top: 0;
+  }
+
+  .program-card {
+    grid-area: program;
+    margin-top: 0;
+  }
+
+  .control-card {
+    grid-area: control;
+    align-self: start;
+    margin-top: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}

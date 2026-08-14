@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="On Your Code Day 2 — three tiny programming challenges with Maro."
+    />
+    <title>On Your Code · Day 2</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./code-viewer.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">ON YOUR MARK</p>
+          <h1>On Your Code</h1>
+        </div>
+        <div class="day-pill">DAY 2</div>
+      </header>
+
+      <nav class="challenge-progress" aria-label="Challenge progress">
+        <button class="progress-step is-current" data-jump="0" type="button">
+          <span>1</span><small>Lantern</small>
+        </button>
+        <i aria-hidden="true"></i>
+        <button class="progress-step" data-jump="1" type="button" disabled>
+          <span>2</span><small>Debug</small>
+        </button>
+        <i aria-hidden="true"></i>
+        <button class="progress-step" data-jump="2" type="button" disabled>
+          <span>3</span><small>Repeat</small>
+        </button>
+      </nav>
+
+      <section class="mission-card" aria-labelledby="mission-title">
+        <div class="mission-number" id="mission-number">CHALLENGE 1 OF 3</div>
+        <h2 id="mission-title">Reach the lantern</h2>
+        <p id="mission-copy">Use four commands and follow the glowing path.</p>
+        <div class="mission-meta">
+          <span id="slot-rule">4 command slots</span>
+          <span id="concept-label">Sequence</span>
+        </div>
+      </section>
+
+      <section class="game-card" aria-label="Game board">
+        <div id="board" class="board" aria-label="5 by 5 tile board">
+          <div
+            id="mascot"
+            class="mascot is-idle"
+            data-direction="E"
+            aria-label="Maro"
+          >
+            <span class="mascot-sprite" aria-hidden="true"></span>
+          </div>
+        </div>
+        <p id="board-instruction" class="board-instruction" hidden>
+          Before running, tap the tile where you think Maro will stop.
+        </p>
+        <p id="status" class="status" aria-live="polite">
+          Build a four-command program.
+        </p>
+      </section>
+
+      <section class="program-card" aria-labelledby="program-title">
+        <div class="section-heading">
+          <div>
+            <p class="step-label">BUILD</p>
+            <h2 id="program-title">Maro’s program</h2>
+          </div>
+          <button id="clear-button" class="text-button" type="button">Clear</button>
+        </div>
+
+        <div id="slot-meter" class="slot-meter" aria-live="polite"></div>
+        <ol id="command-list" class="command-list" aria-label="Program commands"></ol>
+
+        <div id="repeat-panel" class="repeat-panel" hidden>
+          <div>
+            <strong>New tool: Repeat</strong>
+            <p>Put two commands inside and Maro will do them four times.</p>
+          </div>
+          <button id="repeat-button" type="button">↻ Repeat 4×</button>
+        </div>
+
+        <div id="command-palette" class="command-palette" aria-label="Command palette">
+          <button class="command-button move" data-command="MOVE" type="button">
+            <span class="command-icon">↑</span>
+            <strong>Move</strong>
+            <small>forward 1 tile</small>
+          </button>
+          <button class="command-button turn-left" data-command="TURN_LEFT" type="button">
+            <span class="command-icon">↶</span>
+            <strong>Turn left</strong>
+            <small>turn only</small>
+          </button>
+          <button class="command-button turn-right" data-command="TURN_RIGHT" type="button">
+            <span class="command-icon">↷</span>
+            <strong>Turn right</strong>
+            <small>turn only</small>
+          </button>
+        </div>
+
+        <p id="builder-hint" class="builder-hint">
+          Try: Move, Move, Turn right, Move.
+        </p>
+      </section>
+
+      <section class="controls" aria-label="Program controls">
+        <button id="run-button" class="run-button" type="button">▶ Run program</button>
+        <button id="reset-button" class="control-button" type="button">
+          <span>⌂</span> Reset Maro
+          <small>keeps commands</small>
+        </button>
+        <button id="undo-button" class="control-button" type="button">
+          <span>↶</span> Undo command
+        </button>
+      </section>
+
+      <section id="explanation-card" class="explanation-card" hidden aria-live="polite">
+        <div class="success-mark" aria-hidden="true">✓</div>
+        <div>
+          <p class="step-label">WHAT YOU FOUND</p>
+          <h2 id="explanation-title">A program follows a sequence.</h2>
+          <p id="explanation-copy"></p>
+          <button id="next-button" type="button">Next challenge →</button>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="./js/app.js"></script>
+    <script type="module" src="./code-viewer.js"></script>
+  </body>
+</html>
