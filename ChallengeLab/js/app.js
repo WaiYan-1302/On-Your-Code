@@ -1,5 +1,5 @@
 import { CHALLENGES } from "./challenges.js";
-import { GridEngine, expandRepeat, simulate, runReactiveMaze } from "./engine.js";
+import { GridEngine, expandRepeat, runColorRoute, simulateMission } from "./engine.js";
 
 const board = document.querySelector("#board");
 const mascot = document.querySelector("#mascot");
@@ -22,29 +22,84 @@ const state = {
   busy: false,
 };
 const scenePseudocode = {
+  en: {
   sequence: ["RUN each instruction in order", "MOVE()", "MOVE()", "TURN_LEFT()", "MOVE()"],
   trace: ["PREDICT(final_position)", "RUN(program)", "COMPARE(prediction, position)"],
   debug: ["RUN(program)", "FIND first wrong instruction", "REPLACE(instruction)", "RUN(program)"],
   loop: ["REPEAT(4):", "  MOVE()", "  TURN_RIGHT()", "END_REPEAT"],
   parameter: ["MOVE(horizontal_distance)", "TURN_RIGHT()", "MOVE(vertical_distance)"],
   conditional: ["REPEAT until goal:", "  IF wall_ahead:", "    TURN_RIGHT()", "  ELSE:", "    MOVE()"],
-  variable: ["steps = route_length", "MOVE(steps)", "UPDATE steps when route changes"],
-  function: ["FUNCTION corner():", "  MOVE()", "  TURN_RIGHT()", "  MOVE()", "corner()", "corner()"],
-  efficiency: ["TEST(candidate)", "IF result is correct:", "  COMPARE written_steps", "CHOOSE shortest clear algorithm"],
-  generalize: ["FOR each map:", "  WHILE not at goal:", "    OBSERVE wall_ahead", "    CHOOSE MOVE() or TURN_RIGHT()"],
+  colors: ["REPEAT UNTIL GOAL", "  IF BLUE: TURN RIGHT", "  IF RED: TURN LEFT", "  IF YELLOW: MOVE 2", "  MOVE"],
+  "lantern-patrol": ["REPEAT UNTIL AT WORKSHOP", "  MOVE", "  IF ON LANTERN", "    LIGHT LANTERN"],
+  "repair-patrol": ["REPEAT UNTIL AT WORKSHOP", "  IF ON LANTERN", "    LIGHT LANTERN", "  MOVE"],
+  "mission-builder": ["DESIGN(world)", "BUILD(program)", "TEST mission", "EXPLAIN(rule)", "LET another camper try"],
+  },
+  ja: {
+    sequence: ["命令を上から順に実行", "MOVE()", "MOVE()", "TURN_LEFT()", "MOVE()"],
+    trace: ["最後の位置を予測", "プログラムを実行", "予測と実際の位置を比べる"],
+    debug: ["プログラムを実行", "最初のまちがいを探す", "命令を置き換える", "もう一度実行"],
+    loop: ["4回 繰り返す:", "  MOVE()", "  TURN_RIGHT()", "繰り返し終了"],
+    parameter: ["MOVE(横の距離)", "TURN_RIGHT()", "MOVE(縦の距離)"],
+    conditional: ["ゴールまで繰り返す:", "  もし前が壁なら:", "    TURN_RIGHT()", "  それ以外:", "    MOVE()"],
+    colors: ["ゴールまで繰り返す", "  もし青なら: TURN RIGHT", "  もし赤なら: TURN LEFT", "  もし黄なら: MOVE 2", "  MOVE"],
+    "lantern-patrol": ["ワークショップまで繰り返す", "  MOVE", "  もしランタンの上なら", "    ランタンをともす"],
+    "repair-patrol": ["ワークショップまで繰り返す", "  もしランタンの上なら", "    ランタンをともす", "  MOVE"],
+    "mission-builder": ["世界をデザイン", "プログラムを作る", "ミッションをテスト", "ルールを説明", "ほかのキャンパーにも試してもらう"],
+  },
 };
 
-window.getSceneCode = () => ({
-  title: `CHALLENGE ${state.index + 1} · ${challenge().title.toUpperCase()}`,
-  steps: scenePseudocode[challenge().id] || ["THINK()", "TEST()", "CHANGE()"],
-  operations: [
+const operationPseudocode = {
+  en: [
     "MOVE(distance = 1):\n  REPEAT distance TIMES:\n    next = position + direction\n    IF next is not a wall:\n      position = next",
     "TURN_LEFT():\n  direction = previous compass direction",
     "TURN_RIGHT():\n  direction = next compass direction",
-    "IF(condition):\n  CHECK current game state\n  RUN only the matching branch",
-    "FUNCTION name(steps):\n  SAVE steps under name\n  RUN the saved steps whenever name() is called",
-    "VARIABLE name = value:\n  STORE value\n  REUSE or UPDATE it later",
+    "REPEAT UNTIL(condition):\n  CHECK condition after each cycle\n  STOP when condition is true",
+    "IF(condition):\n  CHECK current game state\n  RUN only the matching action",
+    "LIGHT_LANTERN():\n  IF standing on a lantern:\n    mark that lantern as lit",
   ],
+  ja: [
+    "MOVE(距離 = 1):\n  距離の回数だけ繰り返す:\n    次の位置 = 現在地 + 向き\n    もし次が壁でなければ:\n      現在地 = 次の位置",
+    "TURN_LEFT():\n  向き = 1つ前の方角",
+    "TURN_RIGHT():\n  向き = 1つ次の方角",
+    "条件まで繰り返す:\n  1周ごとに条件を確かめる\n  条件が本当になったら止まる",
+    "もし(条件):\n  今のゲーム状態を確かめる\n  条件に合う動作だけを実行",
+    "ランタンをともす():\n  もしランタンの上にいれば:\n    そのランタンを点灯済みにする",
+  ],
+};
+
+function currentLanguage() {
+  return document.documentElement.lang === "ja" ? "ja" : "en";
+}
+
+const levelCode = {
+  en: {
+    actions: [["RIGHT", "TURN RIGHT"], ["LEFT", "TURN LEFT"], ["MOVE2", "MOVE 2"]],
+    colors: { blue: "IF BLUE", red: "IF RED", yellow: "IF YELLOW" },
+    colorLoop: "REPEAT UNTIL GOAL → check color rules → MOVE",
+    patrol: [
+      ["correct", "REPEAT UNTIL AT WORKSHOP\n  MOVE\n  IF ON LANTERN\n    LIGHT LANTERN"],
+      ["stop", "IF ON LANTERN\n  LIGHT LANTERN\nMOVE once"],
+      ["skip", "REPEAT UNTIL AT WORKSHOP\n  MOVE"],
+    ],
+    repair: ["REPEAT UNTIL AT WORKSHOP", "IF ON LANTERN", "LIGHT LANTERN", "MOVE"],
+  },
+  ja: {
+    actions: [["RIGHT", "右を向く"], ["LEFT", "左を向く"], ["MOVE2", "2マス進む"]],
+    colors: { blue: "もし青なら", red: "もし赤なら", yellow: "もし黄なら" },
+    colorLoop: "ゴールまで繰り返す → 色のルールを確認 → MOVE",
+    patrol: [
+      ["correct", "ワークショップまで繰り返す\n  MOVE\n  もしランタンの上なら\n    ランタンをともす"],
+      ["stop", "もしランタンの上なら\n  ランタンをともす\n1回だけ MOVE"],
+      ["skip", "ワークショップまで繰り返す\n  MOVE"],
+    ],
+    repair: ["ワークショップまで繰り返す", "もしランタンの上なら", "ランタンをともす", "MOVE"],
+  },
+};
+
+window.getSceneCode = () => ({
+  title: `CHALLENGE ${state.index + 1} · ${challenge().title}`,
+  steps: scenePseudocode[currentLanguage()][challenge().id] || ["THINK()", "TEST()", "CHANGE()"],
+  operations: operationPseudocode[currentLanguage()],
 });
 
 function saveProgress() {
@@ -64,8 +119,24 @@ function buildTiles() {
     tile.setAttribute("aria-label", `column ${x+1}, row ${y+1}`);
     if (c.goal && c.goal.x===x && c.goal.y===y) tile.classList.add("goal");
     if (walls.some(([wx,wy]) => wx===x && wy===y)) tile.classList.add("wall");
+    const color=c.colors?.[`${x},${y}`]; if(color) tile.classList.add(`color-${color}`);
+    if(c.lanterns?.some(([lx,ly])=>lx===x&&ly===y)) tile.classList.add("lantern");
     board.insertBefore(tile, mascot);
   }
+}
+function setMascotState(next) {
+  state.engine.state={...next}; renderMascot();
+}
+async function animatePath(path, { tick=260, lightLanterns=false }={}) {
+  if(state.busy) return;
+  state.busy=true; disableAll(true);
+  board.querySelectorAll(".tile.lit").forEach(tile=>tile.classList.remove("lit"));
+  for(const next of path){
+    setMascotState(next); mascot.classList.add("walking");
+    if(lightLanterns) board.querySelector(`.tile[data-x="${next.x}"][data-y="${next.y}"]`)?.classList.add("lit");
+    await wait(tick); mascot.classList.remove("walking");
+  }
+  state.busy=false; disableAll(false);
 }
 function renderMascot() {
   const s = state.engine.snapshot();
@@ -272,85 +343,95 @@ function renderConditional() {
   };
 }
 
-function renderVariable() {
-  state.data.choice=null;
-  const info=document.createElement("div"); info.className="variable-card"; info.innerHTML=`<div class="code-line">distance = ?  // test 1: 3, test 2: 4</div>`; workspace.append(info);
-  const grid=document.createElement("div"); grid.className="choice-grid";
-  const opts=[
-    ["hard","MOVE 3"], ["var","MOVE distance"], ["both","MOVE 3, then MOVE 1"], ["guess","MOVE until it looks right"],
-  ];
-  opts.forEach(([v,t])=>{const b=choice(t,v);b.onclick=()=>{state.data.choice=v;grid.querySelectorAll("button").forEach(x=>x.classList.toggle("selected",x===b));};grid.append(b)}); workspace.append(grid);
+function renderColors() {
+  const c=challenge(); state.data.rules={blue:null,red:null,yellow:null};
+  const card=document.createElement("div"); card.className="rule-card"; workspace.append(card);
+  const copy=levelCode[currentLanguage()];
+  const actions=copy.actions;
+  function redraw(){
+    card.replaceChildren();
+    Object.keys(state.data.rules).forEach(color=>{
+      const row=document.createElement("div"); row.className="rule-row";
+      row.innerHTML=`<strong class="color-label ${color}">${copy.colors[color]}</strong>`;
+      const picks=document.createElement("div"); picks.className="value-pills";
+      actions.forEach(([value,label])=>{const b=document.createElement("button");b.type="button";b.className=`mini-button${state.data.rules[color]===value?" active":""}`;b.textContent=label;b.onclick=()=>{state.data.rules[color]=value;redraw();};picks.append(b)});
+      row.append(picks);card.append(row);
+    });
+    const code=document.createElement("div");code.className="code-line";code.textContent=copy.colorLoop;card.append(code);
+  } redraw();
   runButton.onclick=async()=>{
-    if(!state.data.choice) return fail("Choose one program.");
-    const results=[3,4].map(distance=> state.data.choice==="var" ? distance : state.data.choice==="hard" ? 3 : state.data.choice==="both" ? 4 : Math.floor(Math.random()*5)+1);
-    const box=document.createElement("div"); box.className="test-results"; box.innerHTML=`<div class="test-result"><span>Test: distance = 3</span><b>${results[0]===3?"PASS":"FAIL"}</b></div><div class="test-result"><span>Test: distance = 4</span><b>${results[1]===4?"PASS":"FAIL"}</b></div>`; workspace.append(box);
-    if(results[0]===3&&results[1]===4) complete(); else fail("One test passed, but the rule should survive a changed value without rewriting the instruction.");
+    if(Object.values(state.data.rules).some(x=>!x)) return fail("Give all three colors an instruction first.");
+    const result=runColorRoute({start:c.start,goal:c.goal,colors:c.colors,rules:state.data.rules});
+    await animatePath(result.path);
+    if(result.solved) complete(); else fail("That color map sends Maro off the route. Watch the tile where the direction first changes.");
   };
 }
 
-function renderFunction() {
-  state.data.body=[]; state.data.calls=0;
-  const card=document.createElement("div"); card.className="function-card"; workspace.append(card);
-  const palette=document.createElement("div"); palette.className="block-row";
-  ["MOVE","LEFT","RIGHT"].forEach(cmd=>{const b=block(cmd);b.onclick=()=>{if(state.data.body.length<3){state.data.body.push(cmd);redraw();}};palette.append(b)});
-  const call=document.createElement("button");call.type="button";call.className="block variable";call.innerHTML="<strong>+ CORNER()</strong>";call.onclick=()=>{if(state.data.calls<2){state.data.calls++;redraw();}};palette.append(call); workspace.append(palette);
-  function redraw(){ card.innerHTML=`<p class="palette-title">DEFINE CORNER()</p><div id="body"></div><p class="palette-title">MAIN PROGRAM</p><div class="program-strip">${Array.from({length:2},(_,i)=>`<div class="slot ${i<state.data.calls?"filled":""}">${i<state.data.calls?"CORNER()":i+1}</div>`).join("")}</div>`; card.querySelector("#body").append(strip(state.data.body,3)); }
-  redraw();
-  runButton.onclick=async()=>{
-    if(state.data.body.length!==3||state.data.calls!==2) return fail("Define three steps for CORNER(), then call it twice.");
-    const commands=[]; for(let i=0;i<state.data.calls;i++) commands.push(...state.data.body); await animateCommands(commands);
-    const s=state.engine.snapshot();
-    if(state.data.body.join(",")==="MOVE,LEFT,MOVE"&&s.x===0&&s.y===2) complete(); else fail("Your function runs exactly as defined. Change the definition once, then both calls will use the new behaviour.");
-  };
+function patrolPath() {
+  const c=challenge();
+  return simulateMission({start:c.start,goal:c.goal,lanterns:c.lanterns,commands:expandRepeat(["MOVE"],4)});
 }
 
-function renderEfficiency() {
+function renderPatrol() {
   state.data.choice=null;
-  const candidates=[
-    {id:"A",title:"Write everything", blocks:8, commands:["MOVE","RIGHT","MOVE","RIGHT","MOVE","RIGHT","MOVE","RIGHT"]},
-    {id:"B",title:"Use a loop", blocks:1, commands:expandRepeat(["MOVE","RIGHT"],4)},
-    {id:"C",title:"Extra checking", blocks:10, commands:["MOVE","RIGHT","MOVE","RIGHT","MOVE","RIGHT","MOVE","RIGHT","RIGHT","RIGHT"]},
-  ];
+  const options=levelCode[currentLanguage()].patrol;
   const list=document.createElement("div");list.className="candidate-list";
-  candidates.forEach(c=>{const b=document.createElement("button");b.type="button";b.className="candidate";b.innerHTML=`<strong>${c.id}. ${c.title}</strong><small>${c.blocks} written block${c.blocks===1?"":"s"} · ${c.commands.length} executed actions</small>`;b.onclick=()=>{state.data.choice=c.id;list.querySelectorAll("button").forEach(x=>x.classList.toggle("selected",x===b));};list.append(b)});workspace.append(list);
+  options.forEach(([id,code])=>{const b=choice(code,id,true);b.classList.add("code-choice");b.onclick=()=>{state.data.choice=id;list.querySelectorAll("button").forEach(x=>x.classList.toggle("selected",x===b));};list.append(b)});workspace.append(list);
   runButton.onclick=async()=>{
-    if(!state.data.choice) return fail("Choose a candidate to test.");
-    const c=candidates.find(x=>x.id===state.data.choice); await animateCommands(c.commands);
-    const s=state.engine.snapshot(); const valid=s.x===1&&s.y===1&&s.direction==="E";
-    if(valid&&c.id==="B") complete(); else if(!valid) fail("That candidate does not even preserve the required final state."); else fail("It works, but another valid program expresses the same pattern with fewer written blocks.");
+    if(!state.data.choice) return fail("Choose the patrol program you want to test.");
+    if(state.data.choice==="stop"){await animatePath(patrolPath().path.slice(0,2),{lightLanterns:true});return fail("Maro moved once, but there was no loop to continue the patrol.");}
+    const result=patrolPath();await animatePath(result.path,{lightLanterns:state.data.choice==="correct"});
+    if(state.data.choice==="correct"&&result.solved) complete();else fail("Maro reached the workshop, but the lantern condition was missing.");
   };
 }
 
-function renderGeneralize() {
-  state.data.choice=null;
-  const maps=[
-    {name:"Map A",size:5,start:{x:0,y:0,direction:"E"},goal:{x:4,y:4},walls:[]},
-    {name:"Map B",size:5,start:{x:0,y:1,direction:"E"},goal:{x:1,y:4},walls:[[2,1]]},
-    {name:"Map C",size:5,start:{x:4,y:4,direction:"W"},goal:{x:3,y:0},walls:[[2,4]]},
-  ];
-  // Curated reactive mazes are tested by the same local policy; if a map fails, we use the fallback corridor policy in testAlgorithm below.
-  const algorithms=[
-    {id:"hard",title:"Memorized route",desc:"MOVE ×4 → RIGHT → MOVE ×2"},
-    {id:"react",title:"Reactive rule",desc:"REPEAT: IF wall ahead → RIGHT, ELSE → MOVE"},
-    {id:"spin",title:"Fixed rhythm",desc:"MOVE → RIGHT → MOVE → LEFT, repeat"},
-  ];
-  const list=document.createElement("div");list.className="candidate-list";
-  algorithms.forEach(a=>{const b=document.createElement("button");b.type="button";b.className="candidate";b.innerHTML=`<strong>${a.title}</strong><small>${a.desc}</small>`;b.onclick=()=>{state.data.choice=a.id;list.querySelectorAll("button").forEach(x=>x.classList.toggle("selected",x===b));};list.append(b)});workspace.append(list);
-  const results=document.createElement("div");results.className="test-results";workspace.append(results);
-  function testAlgorithm(id,map){
-    if(id==="hard") { const s=simulate({start:map.start,size:5,walls:map.walls,commands:["MOVE","MOVE","MOVE","MOVE","RIGHT","MOVE","MOVE"]}); return s.x===map.goal.x&&s.y===map.goal.y; }
-    if(id==="spin") { const cmds=expandRepeat(["MOVE","RIGHT","MOVE","LEFT"],6); const s=simulate({start:map.start,size:5,walls:map.walls,commands:cmds}); return s.x===map.goal.x&&s.y===map.goal.y; }
-    return runReactiveMaze({ map, maxTicks: 60 }).solved;
+function renderRepairPatrol() {
+  state.data.moveOutside=false;
+  const card=document.createElement("div");card.className="indent-card";workspace.append(card);
+  function redraw(){
+    const lines=levelCode[currentLanguage()].repair;
+    card.innerHTML=`<div class="code-line patrol-code">${lines[0]}<br>&nbsp;&nbsp;${lines[1]}<br>&nbsp;&nbsp;&nbsp;&nbsp;${lines[2]}<br><button type="button" id="indent-move" class="indent-command ${state.data.moveOutside?"fixed":"broken"}">${state.data.moveOutside?"&nbsp;&nbsp;":"&nbsp;&nbsp;&nbsp;&nbsp;"}${lines[3]}</button></div><p>${state.data.moveOutside?"MOVE is now part of the loop.":"MOVE is inside IF ON LANTERN."}</p>`;
+    card.querySelector("#indent-move").onclick=()=>{state.data.moveOutside=!state.data.moveOutside;redraw();say(state.data.moveOutside?"Grouping changed. Test the repair.":"MOVE returned inside the condition.");};
+  } redraw();
+  runButton.onclick=async()=>{
+    if(!state.data.moveOutside){await animatePath([challenge().start],{lightLanterns:true});return fail("Maro is not on a lantern, so the whole IF group is skipped—including MOVE.");}
+    const result=patrolPath();await animatePath(result.path,{lightLanterns:true});if(result.solved) complete();
+  };
+}
+
+function renderMissionBuilder() {
+  const c=challenge();
+  state.data={mode:"lantern",start:{...c.start},goal:{...c.goal},lanterns:c.lanterns.map(p=>[...p]),walls:[],program:[],explanation:null};
+  const editor=document.createElement("div");editor.className="mission-editor";
+  const toolRow=document.createElement("div");toolRow.className="builder-tools";
+  [["start","Place Maro"],["goal","Place workshop"],["lantern","Add lantern"],["wall","Add wall"],["erase","Erase"]].forEach(([id,label])=>{const b=document.createElement("button");b.type="button";b.className=`mini-button${id===state.data.mode?" active":""}`;b.textContent=label;b.onclick=()=>{state.data.mode=id;toolRow.querySelectorAll("button").forEach(x=>x.classList.toggle("active",x===b));};toolRow.append(b)});editor.append(toolRow);
+  const direction=document.createElement("div");direction.className="direction-row";direction.innerHTML="<span>START FACING</span>";
+  ["N","E","S","W"].forEach(d=>{const b=document.createElement("button");b.type="button";b.className=`mini-button${d===state.data.start.direction?" active":""}`;b.textContent=d;b.onclick=()=>{state.data.start.direction=d;direction.querySelectorAll("button").forEach(x=>x.classList.toggle("active",x===b));setupMissionBoard();};direction.append(b)});editor.append(direction);workspace.append(editor);
+  const programBox=document.createElement("div");workspace.append(programBox);
+  const palette=document.createElement("div");palette.className="block-row";
+  ["MOVE","LEFT","RIGHT"].forEach(cmd=>{const b=block(cmd);b.onclick=()=>{if(state.data.program.length<20){state.data.program.push(cmd);redrawProgram();}};palette.append(b)});
+  const undo=choice("Undo","undo");undo.onclick=()=>{state.data.program.pop();redrawProgram();};
+  const clear=choice("Clear","clear");clear.onclick=()=>{state.data.program=[];redrawProgram();};palette.append(undo,clear);workspace.append(palette);
+  const explain=document.createElement("div");explain.className="choice-grid explain-grid";
+  [["route","I planned the route in small steps."],["test","I tested and revised my program."],["objects","My rule visits every required object."]].forEach(([id,label])=>{const b=choice(label,id,true);b.onclick=()=>{state.data.explanation=id;explain.querySelectorAll("button").forEach(x=>x.classList.toggle("selected",x===b));};explain.append(b)});workspace.append(explain);
+  function redrawProgram(){programBox.replaceChildren();const label=document.createElement("p");label.className="palette-title";label.textContent=`PROGRAM · ${state.data.program.length}/20 COMMANDS`;programBox.append(label,strip(state.data.program,Math.max(6,state.data.program.length)));}
+  function setupMissionBoard(){
+    const d=state.data;state.engine=new GridEngine({size:5,start:d.start,walls:d.walls});[...board.querySelectorAll(".tile")].forEach(t=>t.remove());
+    for(let y=0;y<5;y++)for(let x=0;x<5;x++){const t=document.createElement("button");t.type="button";t.className="tile";t.dataset.x=x;t.dataset.y=y;t.setAttribute("aria-label",`column ${x+1}, row ${y+1}`);if(d.goal.x===x&&d.goal.y===y)t.classList.add("goal");if(d.walls.some(([a,b])=>a===x&&b===y))t.classList.add("wall");if(d.lanterns.some(([a,b])=>a===x&&b===y))t.classList.add("lantern");t.onclick=()=>editTile(x,y);board.insertBefore(t,mascot);}renderMascot();
   }
+  function editTile(x,y){
+    const d=state.data;const here=([a,b])=>a===x&&b===y;d.walls=d.walls.filter(p=>!here(p));d.lanterns=d.lanterns.filter(p=>!here(p));
+    if(d.mode==="start")d.start={x,y,direction:d.start.direction};else if(d.mode==="goal")d.goal={x,y};else if(d.mode==="lantern"&&!(d.start.x===x&&d.start.y===y)&&!(d.goal.x===x&&d.goal.y===y)&&d.lanterns.length<3)d.lanterns.push([x,y]);else if(d.mode==="wall"&&!(d.start.x===x&&d.start.y===y)&&!(d.goal.x===x&&d.goal.y===y))d.walls.push([x,y]);setupMissionBoard();
+  }
+  redrawProgram();setupMissionBoard();runButton.textContent="▶ Test mission";
   runButton.onclick=async()=>{
-    if(!state.data.choice) return fail("Choose one algorithm to test across all three maps.");
-    results.replaceChildren(); let passed=0;
-    for(const map of maps){ const ok=testAlgorithm(state.data.choice,map); const r=document.createElement("div");r.className="test-result";r.innerHTML=`<span>${map.name}</span><b>${ok?"PASS":"FAIL"}</b>`;results.append(r); if(ok)passed++; await wait(220); }
-    if(passed===3&&state.data.choice==="react") complete("Generalization","A useful algorithm captures a rule that survives new cases. Reactive logic is more flexible than memorizing one route."); else fail(`${passed}/3 maps passed. A smarter algorithm needs to react to the map instead of assuming one fixed route.`);
+    const d=state.data;if(d.lanterns.length<2)return fail("Place at least two lanterns in your mission.");if(!d.program.length)return fail("Build a program before testing the mission.");if(!d.explanation)return fail("Choose the sentence that best explains your design rule.");
+    const result=simulateMission({start:d.start,goal:d.goal,walls:d.walls,lanterns:d.lanterns,commands:d.program});await animatePath(result.path,{lightLanterns:true});
+    if(result.solved)complete("Mission designed!","Your mission is possible: Maro reached the workshop, every lantern was lit, and you explained the rule behind your design.");else if(result.blocked)fail("Maro hit a wall or the edge. Revise the route or the program, then test again.");else fail(`Maro lit ${result.lit.size}/${d.lanterns.length} lanterns and did not finish correctly. Change one thing and retest.`);
   };
 }
 
-const renderers={builder:renderBuilder,prediction:renderPrediction,debug:renderDebug,loop:renderLoop,parameter:renderParameter,conditional:renderConditional,variable:renderVariable,function:renderFunction,efficiency:renderEfficiency,generalize:renderGeneralize};
+const renderers={builder:renderBuilder,prediction:renderPrediction,debug:renderDebug,loop:renderLoop,parameter:renderParameter,conditional:renderConditional,colors:renderColors,patrol:renderPatrol,"repair-patrol":renderRepairPatrol,"mission-builder":renderMissionBuilder};
 const hints={
   sequence:"Imagine being Maro. Which instruction changes direction before the final move?",
   trace:"Track three things after every command: x position, y position, and facing direction.",
@@ -358,17 +439,18 @@ const hints={
   loop:"A square repeats the same two actions four times.",
   parameter:"The route is an L shape: first horizontal distance, then vertical distance.",
   conditional:"Look for the option that asks a question before choosing an action.",
-  variable:"A named value can change while the instruction stays the same.",
-  function:"The repeated mini-route is MOVE, turn toward the next leg, MOVE.",
-  efficiency:"Correctness first. Then compare how much you have to write to express the same behaviour.",
-  generalize:"A memorized route knows one map. A reactive rule observes what is happening now.",
+  colors:"Blue turns right, red turns left, and yellow moves twice before the loop's final MOVE.",
+  "lantern-patrol":"The loop must contain MOVE and the lantern condition, so both actions repeat until the workshop.",
+  "repair-patrol":"MOVE must happen whether or not Maro is standing on a lantern. Change its indentation.",
+  "mission-builder":"Start with a simple route. Place two lanterns along it, then build and test the turns one at a time.",
 };
 
 function load(index){
   state.index=index; state.data={}; state.busy=false;
   explanationCard.hidden=true; workspace.replaceChildren();
   renderHeader(); buildTiles(); setupEngine(); markGoal(challenge().goal); renderProgress();
-  boardNote.textContent = challenge().walls?.length ? "Dark tiles are walls. Maro cannot enter them." : "Follow position and direction; both are part of the program state.";
+  runButton.textContent="▶ Test algorithm";
+  boardNote.textContent = challenge().kind==="mission-builder" ? "Choose a tool, then tap the board to design your mission." : challenge().colors ? "Colored tiles are instructions: observe the color before moving." : challenge().lanterns ? "Lanterns glow when Maro activates them." : challenge().walls?.length ? "Dark tiles are walls. Maro cannot enter them." : "Follow position and direction; both are part of the program state.";
   say(state.completed.has(index)?"You solved this before. Try it again or inspect the idea another way.":"Think first, then test.");
   renderers[challenge().kind]();
   runButton.disabled=false;
@@ -381,5 +463,6 @@ hintButton.addEventListener("click",()=>{
   const box=document.createElement("div");box.className="hint-box";box.dataset.live="1";box.textContent=hints[challenge().id];workspace.append(box);
 });
 nextButton.addEventListener("click",()=>{ if(state.index<9) load(state.index+1); });
+window.addEventListener("oyc-language-change",()=>load(state.index));
 
 load(0);

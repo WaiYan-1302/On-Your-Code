@@ -72,18 +72,39 @@ export function expandRepeat(body, count) {
   return out;
 }
 
-export function runReactiveMaze({ map, maxTicks = 80 }) {
-  const engine = new GridEngine({ size: map.size, start: map.start, walls: map.walls });
+export function runColorRoute({ start, goal, colors, rules, size = 5, maxTicks = 40 }) {
+  const engine = new GridEngine({ size, start });
   const path = [engine.snapshot()];
-  let ticks = 0;
-  while (ticks < maxTicks) {
-    if (engine.state.x === map.goal.x && engine.state.y === map.goal.y) {
-      return { solved: true, ticks, path };
+  for (let ticks = 0; ticks < maxTicks; ticks += 1) {
+    if (engine.state.x === goal.x && engine.state.y === goal.y) return { solved: true, path };
+    const color = colors[`${engine.state.x},${engine.state.y}`];
+    const action = color && rules[color];
+    if (action === "LEFT" || action === "RIGHT") engine.execute(action);
+    if (action === "MOVE2") {
+      engine.execute("MOVE"); path.push(engine.snapshot());
+      engine.execute("MOVE"); path.push(engine.snapshot());
     }
-    if (engine.wallAhead()) engine.turnRight();
-    else engine.move();
-    path.push(engine.snapshot());
-    ticks += 1;
+    engine.execute("MOVE"); path.push(engine.snapshot());
   }
-  return { solved: false, ticks, path };
+  return { solved: false, path };
+}
+
+export function simulateMission({ start, goal, walls = [], lanterns = [], commands, size = 5 }) {
+  const engine = new GridEngine({ size, start, walls });
+  const lit = new Set();
+  const path = [engine.snapshot()];
+  const lightHere = () => {
+    if (lanterns.some(([x, y]) => x === engine.state.x && y === engine.state.y)) {
+      lit.add(`${engine.state.x},${engine.state.y}`);
+    }
+  };
+  lightHere();
+  for (const command of commands) {
+    const result = engine.execute(command);
+    path.push(engine.snapshot());
+    lightHere();
+    if (result.blocked) return { solved: false, blocked: true, lit, path, state: engine.snapshot() };
+  }
+  const atGoal = engine.state.x === goal.x && engine.state.y === goal.y;
+  return { solved: atGoal && lit.size === lanterns.length, blocked: false, lit, path, state: engine.snapshot() };
 }

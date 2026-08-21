@@ -11,10 +11,10 @@ It keeps the same visual language (outlined cards, Bauhaus geometry, Day 2 palet
 4. **Say it smaller — Loop**: compress a square into a repeated two-step pattern.
 5. **One command, different distance — Parameters**: change values instead of inventing new commands.
 6. **Make the program react — Conditionals**: choose behaviour based on a wall ahead.
-7. **Remember a value — Variables**: use a named value that survives changing test data.
-8. **Teach Maro a shortcut — Functions**: define a reusable mini-algorithm once and call it twice.
-9. **Same result, less work — Efficiency**: compare valid algorithms by written complexity.
-10. **One program, three mazes — Generalization**: choose reactive logic that works across multiple cases.
+7. **Follow the Colors — Conditions + movement**: map blue, red, and yellow tiles to visible movement rules.
+8. **Lantern Patrol — Repeat until**: keep moving and light each lantern until Maro reaches the workshop.
+9. **Repair the Patrol Program — Debugging groups**: fix the indentation that traps `MOVE` inside a condition.
+10. **Build a Mission — Creative system design**: place Maro, a workshop, lanterns, and walls; build and explain a working program.
 
 Each solved challenge unlocks a concise concept card and the next mission. Progress is stored in `localStorage`.
 
