@@ -21,6 +21,20 @@
     "type": "static"
   },
   {
+    "id": "creature-lab",
+    "name": "Creature Behavior Lab",
+    "route": "/creature-lab/",
+    "folder": "CreatureLab",
+    "type": "static"
+  },
+  {
+    "id": "mini-world-simulator",
+    "name": "Mini World Simulator",
+    "route": "/mini-world-simulator/",
+    "folder": "MiniWorldSimulator",
+    "type": "static"
+  },
+  {
     "id": "workshop",
     "name": "Maro's Workshop",
     "route": "/workshop/",

@@ -1,0 +1,13 @@
+{
+  "projects": [
+    {
+      "id": "scene-05-creature-behavior-lab",
+      "title": "Maro's Workshop 2 — Creature Behavior Lab",
+      "type": "interactive-scene",
+      "theme": ["Bauhaus", "Maro-kun", "Creative Coding"],
+      "description": "Players build tiny creatures, assign simple behavior rules, and test them in a sandbox with Maro.",
+      "controls": ["Arrow keys / WASD", "Mouse click"],
+      "status": "ready"
+    }
+  ]
+}

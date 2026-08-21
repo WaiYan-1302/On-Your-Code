@@ -1,0 +1,14 @@
+{
+  "name": "maro-creature-behavior-lab",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A Bauhaus-style Maro-kun creature behavior sandbox for On Your Code.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "setup": "node setup.js",
+    "preview": "node preview-deploy.js",
+    "build": "node build-deploy.js",
+    "test": "node --test"
+  }
+}

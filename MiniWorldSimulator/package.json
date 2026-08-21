@@ -1,0 +1,14 @@
+{
+  "name": "maro-mini-world-simulator",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Maro's Workshop 2: a deterministic mini world simulation sandbox.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "setup": "node setup.js",
+    "preview": "node preview-deploy.js",
+    "build": "node build-deploy.js",
+    "test": "node --test"
+  }
+}
